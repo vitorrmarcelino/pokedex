@@ -1,100 +1,79 @@
-/* eslint-disable consistent-return */
-/* eslint-disable no-console */
-/* eslint-disable dot-notation */
-/* eslint-disable react/button-has-type */
-/* eslint-disable react/react-in-jsx-scope */
+/* eslint-disable */
+import React, { useState } from 'react';
 import './App.css';
 import pokedexImg from './assets/img/pokedex.png';
 
-const pokemonName = document.querySelector('.pokemonName');
-const pokemonNumber = document.querySelector('.pokemonNumber');
-const pokemonImage = document.querySelector('.pokemonImage');
-
-const form = document.querySelector('.form');
-const input = document.querySelector('.inputSearch');
-const prev = document.querySelector('.btnPrev');
-const next = document.querySelector('.btnNext');
-
-const fetchPokemon = async (pokemon) => {
-  const APIResponse = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon}`);
-
-  if (APIResponse.status === 200) {
-    const data = await APIResponse.json();
-    return data;
-  }
-};
-
-const renderPokemon = async (pokemon) => {
-  const data = await fetchPokemon(pokemon);
-
-  pokemonName.innerHTML = 'Loading...';
-  pokemonNumber.innerHTML = '';
-  if (data) {
-    pokemonName.innerHTML = data.name;
-    pokemonNumber.innerHTML = data.id;
-    pokemonNumber.value = data.id;
-
-    pokemonImage.src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/${data.id}.gif`;
-  } else {
-    pokemonName.innerHTML = 'Not Found';
-  }
-
-  input.value = '';
-};
-
-form.addEventListener('submit', (event) => {
-  event.preventDefault();
-
-  renderPokemon(input.value.toLowerCase());
-});
-
-prev.addEventListener('click', (event) => {
-  event.preventDefault();
-
-  const pokemonId = Number(pokemonNumber.value);
-
-  renderPokemon(pokemonId - 1);
-});
-
-next.addEventListener('click', (event) => {
-  event.preventDefault();
-
-  const pokemonId = Number(pokemonNumber.value);
-
-  renderPokemon(pokemonId + 1);
-});
-
-renderPokemon('1');
-
 function App() {
-  return (
+  const [pokemonName, setPokemonName] = useState('');
+  const [pokemonNumber, setPokemonNumber] = useState('');
+  const [pokemonImageSrc, setPokemonImageSrc] = useState('');
 
+  const fetchPokemon = async (pokemon) => {
+    const APIResponse = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon}`);
+
+    if (APIResponse.status === 200) {
+      const data = await APIResponse.json();
+      return data;
+    }
+  };
+
+  const renderPokemon = async (pokemon) => {
+    const data = await fetchPokemon(pokemon);
+
+    if (data) {
+      setPokemonName(data.name);
+      setPokemonNumber(data.id);
+      setPokemonImageSrc(`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/${data.id}.gif`);
+    } else {
+      setPokemonName('Not Found Bro');
+      setPokemonNumber('');
+      setPokemonImageSrc('');
+    }
+  };
+
+  const handleSearch = (event) => {
+    event.preventDefault();
+    renderPokemon(event.target.inputSearch.value.toLowerCase());
+  };
+
+  const handlePrev = () => {
+    const pokemonId = Number(pokemonNumber);
+    renderPokemon(pokemonId - 1);
+  };
+
+  const handleNext = () => {
+    const pokemonId = Number(pokemonNumber);
+    renderPokemon(pokemonId + 1);
+  };
+
+  renderPokemon('1');
+
+  return (
     <main>
       <img src={pokedexImg} alt="pokedex" className="pokedex" />
 
-      <img src="#" alt="pokemon" className="pokemonImage" />
+      <img src={pokemonImageSrc} alt="pokemon" className="pokemonImage" />
 
       <h1 className="podemonData">
-        <span className="pokemonNumber"> </span>
+        <span className="pokemonNumber">{pokemonNumber}</span>
         <span>-</span>
-        <span className="pokemonName"> </span>
+        <span className="pokemonName">{pokemonName}</span>
       </h1>
 
-      <form className="form">
+      <form className="form" onSubmit={handleSearch}>
         <input
           type="search"
           className="inputSearch"
+          name="inputSearch"
           placeholder="Name or Number"
           required
         />
       </form>
 
       <div className="buttons">
-        <button className="button btnPrev">Prev &lt; </button>
-
-        <button className="button btnNext">Next &gt; </button>
+        <button className="button btnPrev" onClick={handlePrev}>Prev &lt;</button>
+        <button className="button btnNext" onClick={handleNext}>Next &gt;</button>
       </div>
-
     </main>
   );
 }
