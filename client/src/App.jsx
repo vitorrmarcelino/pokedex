@@ -77,7 +77,7 @@ function App() {
     <main>
       <img src={pokedexImg} alt="pokedex" className="pokedex" />
 
-      <img src="#" alt="pokemon" className="pokemonImage" />
+      <img src="" alt="pokemon" className="pokemonImage" />
 
       <h1 className="podemonData">
         <span className="pokemonNumber"> </span>
