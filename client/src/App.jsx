@@ -17,27 +17,31 @@ const next = document.querySelector('.btnNext');
 const fetchPokemon = async (pokemon) => {
   const APIResponse = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon}`);
 
-  const data = await APIResponse.json();
-
-  return data;
+  if (APIResponse === 200) {
+    const data = await APIResponse.json();
+    return data;
+  }
 };
 
 const renderPokemon = async (pokemon) => {
   const data = await fetchPokemon(pokemon);
+  if (data) {
+    pokemonName.innerHTML = data.name;
+    pokemonNumber.innerHTML = data.id;
+    pokemonNumber.value = data.id;
 
-  pokemonName.innerHTML = data.name;
-  pokemonNumber.innerHTML = data.id;
-  pokemonNumber.value = data.id;
+    pokemonImage.src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/${data.id}.gif`;
+  } else {
+    pokemonName.innerHTML = 'Not Found';
+  }
 
-  pokemonImage.src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/${data.id}.gif`;
+  input.value = '';
 };
 
 form.addEventListener('submit', (event) => {
   event.preventDefault();
 
-  renderPokemon(input.value);
-
-  input.value = '';
+  renderPokemon(input.value.toLowerCase());
 });
 
 prev.addEventListener('click', (event) => {
