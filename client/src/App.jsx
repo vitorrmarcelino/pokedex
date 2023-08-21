@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 /* eslint-disable no-console */
 /* eslint-disable dot-notation */
 /* eslint-disable react/button-has-type */
@@ -17,7 +18,7 @@ const next = document.querySelector('.btnNext');
 const fetchPokemon = async (pokemon) => {
   const APIResponse = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon}`);
 
-  if (APIResponse === 200) {
+  if (APIResponse.status === 200) {
     const data = await APIResponse.json();
     return data;
   }
@@ -25,6 +26,9 @@ const fetchPokemon = async (pokemon) => {
 
 const renderPokemon = async (pokemon) => {
   const data = await fetchPokemon(pokemon);
+
+  pokemonName.innerHTML = 'Loading...';
+  pokemonNumber.innerHTML = '';
   if (data) {
     pokemonName.innerHTML = data.name;
     pokemonNumber.innerHTML = data.id;
@@ -59,6 +63,8 @@ next.addEventListener('click', (event) => {
 
   renderPokemon(pokemonId + 1);
 });
+
+renderPokemon('1');
 
 function App() {
   return (
