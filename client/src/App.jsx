@@ -67,12 +67,8 @@ function App() {
 
     renderPokemon('1');
   }, []);
-
-
-
+  
   //Parte "HTML"
-
-
   return (
     <main>
       <img src={pokedexImg} alt="pokedex" className="pokedex" />
