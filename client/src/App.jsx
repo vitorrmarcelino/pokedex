@@ -5,7 +5,6 @@ import pokedexImg from './assets/img/pokedex.png';
 import React, { useEffect } from 'react';
 
 function App() {
-
   useEffect(() => {
     const pokemonName = document.querySelector('.pokemonName');
     const pokemonNumber = document.querySelector('.pokemonNumber');
@@ -64,6 +63,7 @@ function App() {
 
       renderPokemon(pokemonId + 1);
     });
+
 
     renderPokemon('1');
   }, []);
